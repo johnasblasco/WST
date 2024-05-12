@@ -1,11 +1,46 @@
+<?php
+session_start();
+
+$username = $password = "";
+$username_err = $password_err = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+   
+    if (empty(trim($_POST["username"]))) {
+        $username_err = "Please enter username.";
+    } else {
+        $username = trim($_POST["username"]);
+    }
+
+    if (empty(trim($_POST["password"]))) {
+        $password_err = "Please enter your password.";
+    } else {
+        $password = trim($_POST["password"]);
+    }
+    if (empty($username_err) && empty($password_err)) {
+        $xml = simplexml_load_file('database/users.xml');
+        foreach ($xml->children() as $user) {
+            if ($user->username == $username && $user->password == $password) {
+				$_SESSION['username'] = $username;
+                header("location: pages/dashboard.php");
+                exit();
+            }
+        }
+		echo"<script>alert('Invalid Credentials')</script>";
+        $password_err = "Invalid username or password.";
+    }
+}
+?>
+
 
 <!doctype html>
-<html class="no-js" lang="pinoy ako">
+<html class="no-js" lang="pinoy ako pinoy, ipakita sa mundo kung ano ang kaya mo">
     
 	<head>
     
         <?php include "includes/icon.html"?>
 		<title>Login Page</title>
+		<link rel="stylesheet" href="bootstrap/css/style.css">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.0/normalize.min.css">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
@@ -72,6 +107,9 @@
 				color: #888;
 				text-align: center;
 			}
+			.btn{
+				background-color: #0d0b29;
+			}
 
 			@media screen and (max-width: 425px) {
 				.my-login-page .card-wrapper {
@@ -102,6 +140,9 @@
 						<div class="card fat">
 							<div class="card-body">
 								<h4 class="card-title">Login</h4>
+
+
+	<!-- ================FORM===================== -->
 								<form method="POST" class="my-login-validation" novalidate="">
 									<div class="form-group">
 										<label for="email">Username</label>
@@ -121,11 +162,12 @@
 										</div>
 									</div>
 									<div class="form-group m-0">
-										<button type="submit" name="login" class="btn btn-primary btn-block"> Login </button>
+										<button type="submit" name="login" class="btn btn-block text-white"> Login </button>
 									</div>
-									<div class="mt-4 text-center"> Don't have an account? <a href="#">Create One</a>
+									<div class="mt-4 text-center"> Don't have an account? <a href="register.php">Create One</a>
 									</div>
 								</form>
+	<!-- ================FORM===================== -->
 							</div>
 						</div>
 						<div class="footer"> Allrights Reserved Copyright &copy; 2024 &mdash; WST </div>

@@ -1,3 +1,6 @@
+<?php 
+    session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,9 +12,13 @@
     <link rel="stylesheet" href="../bootstrap/css/style.css">
 </head>
 <body>
-    
-<?php include '../includes/sidebar.php' ?>
+
+
+    <?php include '../includes/header.php' ?>
+    <?php include '../includes/sidebar.php' ?>
     <?php include '../includes/main.php' ?>
+    
+  
 
 
 <script src="../bootstrap/js/script.js"></script>
