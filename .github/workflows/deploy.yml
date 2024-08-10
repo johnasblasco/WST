@@ -1,0 +1,22 @@
+name: Deploy PHP Application
+
+on:
+  push:
+    branches:
+      - main # Trigger deployment on pushes to the main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy to server
+        env:
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }} # SSH private key for deployment
+          REMOTE_SERVER: ${{ secrets.REMOTE_SERVER }} # Remote server address
+          REMOTE_USER: ${{ secrets.REMOTE_USER }} # Remote server user
+        run: |
+          rsync -avz --delete --exclude '.git' ./ $REMOTE_USER@$REMOTE_SERVER:/path/to/deploy/
